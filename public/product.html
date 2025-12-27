@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitliving - Product Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .product-detail-container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 4rem 10%;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .product-image-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .product-image-section img {
+            width: 100%;
+            border: 1px solid #eee;
+        }
+
+        .product-info-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .product-info-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .product-info-section .price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .product-info-section p {
+            margin-bottom: 2rem;
+            color: #555;
+        }
+
+        .enquire-btn {
+            background-color: #25d366;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 5px;
+            display: inline-flex;
+            align-items: center;
+            transition: background 0.3s;
+            border: none;
+            /* Reset border if any */
+        }
+
+        .enquire-btn i {
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .enquire-btn:hover {
+            background-color: #1ebc57;
+            color: white;
+            /* Ensure text stays white */
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.jpg" alt="FITLIVING Logo">
+            </a>
+        </div>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gym-product.html">Gym Product</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="product-detail-container">
+        <div class="product-image-section">
+            <img id="product-img" src="" alt="Product Image">
+        </div>
+        <div class="product-info-section">
+            <h1 id="product-name">Loading...</h1>
+            <div id="product-price" class="price"></div>
+            <p id="product-desc"></p>
+            <a id="whatsapp-btn" href="#" target="_blank" class="enquire-btn">
+                <i class="fab fa-whatsapp"></i> Enquire on WhatsApp
+            </a>
+
+            <!-- Payment Section -->
+            <div class="payment-section">
+                <h3>Buy Now - Secure Payment</h3>
+                <p>Scan the UPI QR code below to pay securely and send us the screenshot for confirmation.</p>
+                <div class="qr-container">
+                    <img id="payment-qr" src="" alt="UPI Payment QR">
+                </div>
+                <div id="display-upi-id" class="upi-id-box"
+                    style="margin-bottom: 1.5rem; font-weight: 700; color: #333;">
+                    UPI ID: 9179421434@axl
+                </div>
+                <a id="payment-ss-btn" href="#" target="_blank" class="payment-ss-btn">
+                    <i class="fab fa-whatsapp"></i> Send Payment Screenshot
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <h3>FITLIVING</h3>
+            
+            <div class="footer-grid">
+                <!-- Addresses Column -->
+                <div class="footer-addresses">
+                    <h4>Our Locations</h4>
+                    
+                    <div class="address-item">
+                        <h5>Jabalpur Office</h5>
+                        <p>
+                            FIT LIVING<br>
+                            1st floor, Building No-291/1<br>
+                            MAHANADDA, Nagpur Road<br>
+                            Jabalpur, MP - 482001
+                        </p>
+                    </div>
+                    
+                    <div class="address-item">
+                        <h5>Factory Address</h5>
+                        <p>
+                            Zirakpur, Punjab - 140603
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Social Links Column -->
+                <div class="footer-social">
+                    <h4>Connect With Us</h4>
+                    <div class="footer-social-links">
+                        <a href="https://wa.me/917223034469" target="_blank" class="whatsapp-link">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>+91 72230 34469</span>
+                        </a>
+                        <a href="https://www.instagram.com/fitliving_onlineshop?igsh=MWszenk2YmhqdW51ZA==" target="_blank" class="instagram-link">
+                            <i class="fab fa-instagram"></i>
+                            <span>@fitliving_onlineshop</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="copyright">© 2025 FIT LIVING. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Mobile Sidebar -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="mobile-sidebar" id="mobile-sidebar">
+        <button class="close-sidebar" id="close-sidebar">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="sidebar-logo">
+            <img src="images/logo.jpg" alt="FITLIVING Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gym-product.html">Gym Product</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

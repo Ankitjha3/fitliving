@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitliving - Premium Gym & Sports Equipment</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <a href="index.html">
+                <img src="images/logo.jpg" alt="FITLIVING Logo">
+            </a>
+        </div>
+        <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="gym-product.html">Gym Product</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>A place for sports and gym lovers</h1>
+            <p class="hero-subtext">Deals in all kinds of sports and equipments</p>
+            <div class="hero-highlight">Pan India Delivery</div>
+            <br>
+            <a href="#categories" class="btn">Explore Products</a>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <h2 class="section-title" id="categories">Our Collections</h2>
+    <section class="categories">
+        <!-- Categories injected by JS -->
+    </section>
+
+    <!-- Floating WhatsApp -->
+    <a href="https://wa.me/917223034469" class="floating-whatsapp" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <h3>FITLIVING</h3>
+            
+            <div class="footer-grid">
+                <!-- Addresses Column -->
+                <div class="footer-addresses">
+                    <h4>Our Locations</h4>
+                    
+                    <div class="address-item">
+                        <h5>Jabalpur Office</h5>
+                        <p>
+                            FIT LIVING<br>
+                            1st floor, Building No-291/1<br>
+                            MAHANADDA, Nagpur Road<br>
+                            Jabalpur, MP - 482001
+                        </p>
+                    </div>
+                    
+                    <div class="address-item">
+                        <h5>Factory Address</h5>
+                        <p>
+                            Zirakpur, Punjab - 140603
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Social Links Column -->
+                <div class="footer-social">
+                    <h4>Connect With Us</h4>
+                    <div class="footer-social-links">
+                        <a href="https://wa.me/917223034469" target="_blank" class="whatsapp-link">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>+91 72230 34469</span>
+                        </a>
+                        <a href="https://www.instagram.com/fitliving_onlineshop?igsh=MWszenk2YmhqdW51ZA==" target="_blank" class="instagram-link">
+                            <i class="fab fa-instagram"></i>
+                            <span>@fitliving_onlineshop</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="copyright">© 2025 FIT LIVING. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Mobile Sidebar -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <div class="mobile-sidebar" id="mobile-sidebar">
+        <button class="close-sidebar" id="close-sidebar">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="sidebar-logo">
+            <img src="images/logo.jpg" alt="FITLIVING Logo">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="gym-product.html">Gym Product</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact Us</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>

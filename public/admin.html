@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitliving - Admin Panel</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Outfit:wght@300;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Firebase SDKs (Compat) -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+
+    <!-- App Config & Data -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/simple-image-upload.js"></script>
+    <script src="js/data.js"></script>
+
+    <style>
+        /* Minimal & Clean Admin Styles */
+        :root {
+            --primary: #000;
+            --secondary: #fff;
+            --accent: #333;
+            --bg: #f4f4f4;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        /* Login Overlay */
+        #login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            color: #fff;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Dashboard Layout */
+        #admin-dashboard {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-family: 'Anton', sans-serif;
+            margin: 0;
+            letter-spacing: 1px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            background: #ddd;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #000;
+        }
+
+        .tab-btn.active {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        /* Add Form */
+        .add-box {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        .primary-btn {
+            background: #000;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .primary-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Product List Styles */
+        .product-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            background: #fafafa;
+            margin-bottom: 10px;
+            border-radius: 4px;
+        }
+
+        .product-item img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 16px;
+        }
+
+        .product-info p {
+            margin: 3px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .product-actions button {
+            padding: 8px 15px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .edit-btn {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #f44336;
+            color: white;
+        }
+
+        #image-preview img {
+            max-width: 200px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                flex: 1;
+                text-align: center;
+            }
+
+            .product-item {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .product-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 1. LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 style="margin-top:0;">ADMIN LOGIN</h2>
+            <input type="password" id="passcode-input" placeholder="Enter Passcode">
+            <button onclick="checkLogin()">ENTER</button>
+            <p id="login-msg" style="color: red; margin-top: 10px; font-size: 14px;"></p>
+        </div>
+    </div>
+
+    <!-- 2. DASHBOARD -->
+    <div id="admin-dashboard">
+        <header>
+            <h1>FITLIVING ADMIN</h1>
+            <button onclick="logout()"
+                style="background: transparent; border: 1px solid #000; padding: 5px 15px; cursor: pointer;">LOGOUT</button>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('products')">PRODUCTS</button>
+            <button class="tab-btn" onclick="showTab('settings')">SETTINGS</button>
+            <a href="index.html" target="_blank" class="tab-btn">VIEW SITE</a>
+        </div>
+
+        <!-- PRODUCTS SECTION (Default Active) -->
+        <div id="tab-products" class="section active">
+            <div class="add-box">
+                <h3 id="form-title">Add New Product</h3>
+                <form id="product-form" onsubmit="handleProductSubmit(event)">
+                    <input type="hidden" id="edit-product-id">
+                    
+                    <div class="form-group">
+                        <label>Product Name *</label>
+                        <input type="text" id="product-name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <select id="product-category" required>
+                            <option value="">-- Select Category --</option>
+                            <option value="cardio">Cardio</option>
+                            <option value="strength">Strength</option>
+                            <option value="spare-parts">Spare Parts</option>
+                            <option value="accessories">Accessories</option>
+                            <option value="gym-matting">Gym Matting</option>
+                            <option value="lighting">Lighting</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Price (₹) *</label>
+                        <input type="number" id="product-price" required min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Discount (%)</label>
+                        <input type="number" id="product-discount" min="0" max="100" placeholder="e.g., 10 for 10% off">
+                        <small>Leave empty or 0 for no discount</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="product-description" rows="4" placeholder="Product details..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Product Image *</label>
+                        <input type="file" id="product-image" accept="image/*">
+                        <small id="current-image-text" style="display:none; color: #666;">Current image will be kept if no new image is selected</small>
+                        <div id="image-preview" style="margin-top: 10px;"></div>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button type="submit" class="primary-btn" id="submit-btn">ADD PRODUCT</button>
+                        <button type="button" class="primary-btn" id="cancel-btn" onclick="cancelEdit()" 
+                                style="background: #666; display: none;">CANCEL</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="add-box">
+                <h3>Manage Products</h3>
+                
+                <!-- Search Bar -->
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <input type="text" id="product-search" placeholder="🔍 Search products by name, category, or price..." style="padding: 12px; font-size: 15px; border: 2px solid #ddd; border-radius: 8px;">
+                </div>
+
+                <div id="products-list">
+                    <p style="text-align: center; color: #999;">Loading products...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS SECTION -->
+        <div id="tab-settings" class="section">
+            <div class="add-box">
+                <h3>Global Settings</h3>
+                <form onsubmit="handleSettingsSubmit(event)">
+                    <div class="form-group">
+                        <label>WhatsApp Number (10 digits)</label>
+                        <input type="text" id="set-whatsapp" placeholder="e.g. 9876543210">
+                    </div>
+                    <div class="form-group">
+                        <label>Payment UPI / Info</label>
+                        <input type="text" id="set-payment" placeholder="e.g. fitliving@upi">
+                    </div>
+
+                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #ddd;">
+
+                    <h3 style="margin-bottom: 15px;">📊 Meta Pixel (Facebook Ads)</h3>
+                    <div class="form-group">
+                        <label>Meta Pixel ID</label>
+                        <input type="text" id="set-pixel-id" placeholder="e.g. 1234567890123456">
+                        <small>Enter your Facebook/Meta Pixel ID for ad tracking (optional)</small>
+                    </div>
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 10px;">
+                            <input type="checkbox" id="set-pixel-active" style="width: auto; margin: 0;">
+                            <span>Enable Meta Pixel Tracking</span>
+                        </label>
+                        <small>Turn on to activate pixel tracking on your website</small>
+                    </div>
+
+                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #ddd;">
+
+                    <div class="form-group">
+                        <label>Admin Passcode *</label>
+                        <input type="text" id="set-passcode" placeholder="Enter new passcode" required>
+                        <small>⚠️ Remember this passcode! You'll need it to login.</small>
+                    </div>
+
+                    <button type="submit" class="primary-btn">SAVE SETTINGS</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+
+</html>

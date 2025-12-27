@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Product Checker</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            background: red;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>All Products in Database</h1>
+    <div id="products"></div>
+
+    <script>
+        const container = document.getElementById('products');
+
+        db.collection('products').get().then(snapshot => {
+            let html = '<p>Total Products: ' + snapshot.size + '</p>';
+
+            const products = [];
+            snapshot.forEach(doc => {
+                products.push({ id: doc.id, ...doc.data() });
+            });
+
+            // Group by name to find duplicates
+            const grouped = {};
+            products.forEach(p => {
+                const key = p.name.toLowerCase().trim();
+                if (!grouped[key]) grouped[key] = [];
+                grouped[key].push(p);
+            });
+
+            // Display all products
+            Object.keys(grouped).forEach(name => {
+                const items = grouped[name];
+                html += `<div class="product">`;
+                html += `<h3>${name} (${items.length} ${items.length > 1 ? 'DUPLICATES' : 'copy'})</h3>`;
+                items.forEach(item => {
+                    html += `<div style="margin-left: 20px; padding: 5px; background: ${items.length > 1 ? '#ffe0e0' : '#e0ffe0'}">`;
+                    html += `ID: ${item.id}<br>`;
+                    html += `Category: ${item.category}<br>`;
+                    html += `Price: ₹${item.price}<br>`;
+                    html += `Image: ${item.image}<br>`;
+                    html += `<button onclick="deleteProduct('${item.id}', '${item.name}')">DELETE THIS</button>`;
+                    html += `</div>`;
+                });
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+        });
+
+        window.deleteProduct = function (id, name) {
+            if (confirm('Delete product: ' + name + '?')) {
+                db.collection('products').doc(id).delete()
+                    .then(() => {
+                        alert('Deleted!');
+                        location.reload();
+                    })
+                    .catch(err => alert('Error: ' + err.message));
+            }
+        }
+    </script>
+</body>
+
+</html>

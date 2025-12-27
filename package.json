@@ -1,0 +1,11 @@
+{
+  "name": "fitliving",
+  "version": "1.0.0",
+  "description": "Fitliving - Gym and Sports Equipment Store",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'"
+  },
+  "keywords": ["gym", "fitness", "ecommerce"],
+  "author": "",
+  "license": "ISC"
+}

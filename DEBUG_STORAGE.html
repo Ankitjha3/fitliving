@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Firebase Storage Debug</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
+</head>
+<body>
+    <h1>Firebase Storage Debug Tool</h1>
+    <button onclick="testStorage()">Test Storage</button>
+    <button onclick="testUpload()">Test Upload</button>
+    <pre id="output"></pre>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB7fLjjdNTljiwvtCGejcSPen7_p7jDELo",
+            authDomain: "itliving-83a61.firebaseapp.com",
+            projectId: "itliving-83a61",
+            storageBucket: "itliving-83a61.firebasestorage.app",
+            messagingSenderId: "34678146440",
+            appId: "1:34678146440:web:6dc4f9df86f2d3998b263d"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+        const output = document.getElementById('output');
+
+        function log(msg) {
+            output.textContent += msg + '\n';
+            console.log(msg);
+        }
+
+        async function testStorage() {
+            output.textContent = '';
+            log('=== TESTING FIREBASE STORAGE ===\n');
+            
+            try {
+                log('1. Storage instance: ' + (storage ? 'OK' : 'FAIL'));
+                log('2. Bucket: ' + storage.app.options.storageBucket);
+                
+                log('\n3. Testing listAll()...');
+                await storage.ref().listAll();
+                log('   ✅ listAll() SUCCESS - Rules allow read access');
+                
+                log('\n4. Testing ref creation...');
+                const testRef = storage.ref('test/debug.txt');
+                log('   ✅ Ref created: ' + testRef.fullPath);
+                
+                log('\n5. Testing write access...');
+                await testRef.putString('test', 'raw');
+                log('   ✅ Write SUCCESS - Rules allow write access');
+                
+                log('\n6. Getting download URL...');
+                const url = await testRef.getDownloadURL();
+                log('   ✅ URL: ' + url);
+                
+                log('\n7. Deleting test file...');
+                await testRef.delete();
+                log('   ✅ Delete SUCCESS');
+                
+                log('\n✅✅✅ ALL TESTS PASSED! ✅✅✅');
+                log('Storage is working correctly!');
+                
+            } catch (error) {
+                log('\n❌ ERROR: ' + error.code);
+                log('Message: ' + error.message);
+                log('\nFull error:');
+                log(JSON.stringify(error, null, 2));
+                
+                if (error.code === 'storage/unauthorized') {
+                    log('\n🔥 SOLUTION:');
+                    log('Rules are NOT allowing access!');
+                    log('Go to Firebase Console → Storage → Rules');
+                    log('Make sure you clicked PUBLISH button!');
+                }
+            }
+        }
+
+        async function testUpload() {
+            output.textContent = '';
+            log('=== TESTING IMAGE UPLOAD ===\n');
+            
+            try {
+                // Create a small test image (1x1 red pixel)
+                const canvas = document.createElement('canvas');
+                canvas.width = 1;
+                canvas.height = 1;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = 'red';
+                ctx.fillRect(0, 0, 1, 1);
+                
+                log('1. Created test image (1x1 red pixel)');
+                
+                // Convert to blob
+                const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+                log('2. Converted to blob: ' + blob.size + ' bytes');
+                
+                // Upload
+                const fileName = 'test_' + Date.now() + '.png';
+                const ref = storage.ref('products/' + fileName);
+                log('3. Uploading to: products/' + fileName);
+                
+                const uploadTask = ref.put(blob);
+                
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        log('   Progress: ' + progress.toFixed(0) + '%');
+                    },
+                    (error) => {
+                        log('\n❌ UPLOAD FAILED');
+                        log('Error code: ' + error.code);
+                        log('Error message: ' + error.message);
+                        log('\nFull error:');
+                        log(JSON.stringify(error, null, 2));
+                    },
+                    async () => {
+                        log('4. Upload complete!');
+                        const url = await ref.getDownloadURL();
+                        log('5. Download URL: ' + url);
+                        log('\n✅ IMAGE UPLOAD SUCCESSFUL!');
+                        
+                        // Clean up
+                        await ref.delete();
+                        log('6. Test file deleted');
+                    }
+                );
+                
+            } catch (error) {
+                log('\n❌ ERROR: ' + error.message);
+                log(JSON.stringify(error, null, 2));
+            }
+        }
+    </script>
+</body>
+</html>

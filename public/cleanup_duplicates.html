@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Auto Cleanup Duplicates</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+
+        #log {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Auto-Removing Duplicate Products...</h1>
+    <div id="log"></div>
+
+    <script>
+        const log = document.getElementById('log');
+
+        function addLog(msg) {
+            log.innerText += msg + '\n';
+            console.log(msg);
+        }
+
+        async function removeDuplicates() {
+            try {
+                addLog('Fetching all products...');
+                const snapshot = await db.collection('products').get();
+
+                const products = [];
+                snapshot.forEach(doc => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+
+                addLog(`Found ${products.length} total products`);
+
+                // Group by name (case-insensitive)
+                const grouped = {};
+                products.forEach(p => {
+                    const key = (p.name || '').toLowerCase().trim();
+                    if (!grouped[key]) grouped[key] = [];
+                    grouped[key].push(p);
+                });
+
+                // Find duplicates
+                let duplicatesFound = 0;
+                let duplicatesRemoved = 0;
+
+                for (const [name, items] of Object.entries(grouped)) {
+                    if (items.length > 1) {
+                        duplicatesFound++;
+                        addLog(`\nDuplicate found: "${name}" (${items.length} copies)`);
+
+                        // Keep the first one, delete the rest
+                        for (let i = 1; i < items.length; i++) {
+                            addLog(`  Deleting duplicate ID: ${items[i].id}`);
+                            await db.collection('products').doc(items[i].id).delete();
+                            duplicatesRemoved++;
+                        }
+                    }
+                }
+
+                addLog(`\n✅ CLEANUP COMPLETE!`);
+                addLog(`Total duplicate sets found: ${duplicatesFound}`);
+                addLog(`Total duplicate items removed: ${duplicatesRemoved}`);
+                addLog(`\nRefresh your website to see the clean product list!`);
+
+            } catch (error) {
+                addLog(`\n❌ ERROR: ${error.message}`);
+                console.error(error);
+            }
+        }
+
+        // Auto-run on load
+        removeDuplicates();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,74 @@
+========================================
+FIREBASE STORAGE RULES
+========================================
+
+Copy and paste these rules into Firebase Console:
+Storage → Rules tab → Replace all content → Publish
+
+========================================
+DEVELOPMENT RULES (Use for testing)
+========================================
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+========================================
+PRODUCTION RULES (Use when going live)
+========================================
+
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Allow anyone to read images
+    match /{allPaths=**} {
+      allow read: if true;
+    }
+    
+    // Only allow writes to products folder
+    // (In production, add authentication)
+    match /products/{fileName} {
+      allow write: if request.resource.size < 5 * 1024 * 1024  // Max 5MB
+                   && request.resource.contentType.matches('image/.*');  // Only images
+    }
+  }
+}
+
+========================================
+HOW TO APPLY THESE RULES:
+========================================
+
+1. Go to: https://console.firebase.google.com/project/itliving-83a61/storage/itliving-83a61.firebasestorage.app/rules
+
+2. Click the "Rules" tab
+
+3. Delete all existing rules
+
+4. Copy and paste the DEVELOPMENT RULES above
+
+5. Click "Publish" button (top right)
+
+6. Wait 10-30 seconds for rules to propagate
+
+7. Go back to admin panel and click "Test Storage Connection"
+
+8. If green checkmark appears, try uploading a product!
+
+========================================
+TROUBLESHOOTING:
+========================================
+
+If upload still fails after setting rules:
+
+1. Wait 30 seconds - rules take time to propagate
+2. Clear browser cache and refresh admin panel
+3. Check browser console for specific error messages
+4. Verify Storage is enabled in Firebase Console
+5. Check that storageBucket in firebase-config.js matches your actual bucket
+
+========================================
