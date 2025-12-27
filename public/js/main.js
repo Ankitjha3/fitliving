@@ -107,7 +107,8 @@ function renderHomeCategories() {
 }
 
 function renderAllCategories() {
-    if (window.location.pathname.includes('gym-product.html')) {
+    const path = window.location.pathname;
+    if (path.includes('gym-product.html') || path.includes('gym-product')) {
         const container = document.querySelector('.mart-grid');
         if (container && typeof CATEGORIES !== 'undefined') {
             container.innerHTML = CATEGORIES.map(c => `
@@ -121,7 +122,8 @@ function renderAllCategories() {
 }
 
 function handleCategoryPage() {
-    if (window.location.pathname.includes('category.html')) {
+    const path = window.location.pathname;
+    if (path.includes('category.html') || path.includes('category')) {
         const params = new URLSearchParams(window.location.search);
         const categoryType = params.get('type');
         const container = document.getElementById('product-list');
@@ -186,7 +188,8 @@ function handleCategoryPage() {
 }
 
 function handleProductPage() {
-    if (window.location.pathname.includes('product.html')) {
+    const path = window.location.pathname;
+    if (path.includes('product.html') || path.includes('product')) {
         const params = new URLSearchParams(window.location.search);
         const productId = params.get('id');
 
