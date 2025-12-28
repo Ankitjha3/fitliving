@@ -3,7 +3,7 @@ let FIREBASE_PRODUCTS = [];
 let FIREBASE_SETTINGS = {};
 
 // Default Fallback
-let GLOBAL_WHATSAPP = '917223034469';
+let GLOBAL_WHATSAPP = '919179421434';
 let GLOBAL_UPI = '9179421434@axl';
 
 document.addEventListener('DOMContentLoaded', async () => {

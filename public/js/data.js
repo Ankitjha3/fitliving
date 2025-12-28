@@ -1,5 +1,5 @@
 const SETTINGS = {
-    whatsapp: "917223034469",
+    whatsapp: "919179421434",
     paymentInfo: "9179421434@axl",
     pixelId: "",
     isPixelActive: false
