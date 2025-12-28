@@ -904,6 +904,22 @@ footer {
 
 @media (max-width: 768px) {
 
+    header {
+        justify-content: center;
+        position: relative;
+    }
+
+    header .logo {
+        margin: 0 auto;
+    }
+
+    .mobile-menu-toggle {
+        position: absolute;
+        right: 5%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
     header nav,
     #admin-desktop-nav {
         display: none;
